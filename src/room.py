@@ -9,6 +9,7 @@ class Room:
         self.s_to = None
         self.e_to = None
         self.w_to = None
+        self.items = []
   
     def __str__(self):
        return_string = "----------------"
@@ -18,6 +19,8 @@ class Room:
        return_string += self.description
        return_string = "\n"
        return_string += f"{self.get_exits_string()}"
+       return_string += "\n"
+       return_string += f"Items in your room: {self.items}"
        return return_string
       
     def get_exits_string(self):
@@ -31,3 +34,10 @@ class Room:
         if self.w_to is not None:
             exits.append("w")
         return exits
+
+
+    def get_item(self, item_name):
+        for item in self.items:
+            if item.name == item_name:
+                return item
+        return None

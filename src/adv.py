@@ -1,5 +1,6 @@
 from room import Room
 from player import Player
+from item import Item
 
 # Declare all the rooms
 
@@ -32,6 +33,24 @@ room['overlook'].s_to = room['foyer']
 room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
+
+# List of items
+
+tiara = Item("tiara", "Beautiful and Precious")
+bag = Item("bag", "Protect valuable")
+candle = Item("candle", "Shine light")
+lighter = Item("lighter", "DO you have a candle?")
+maps = Item("maps", "Help to find burried treasure")
+pen = Item("pen", "All set!")
+
+# Add items to rooms
+
+room["outside"].items.append(candle)
+room["foyer"].items.append(bag)
+room["overlook"].items.append(maps)
+room["narrow"].items.append(lighter)
+room["treasure"].items.append(tiara)
+room["outside"].items.append(pen)
 
 #
 # Main
@@ -73,7 +92,33 @@ while True:
         print("Please enter your diection from the list: ")
         # Print valid directions
         print(player.current_room)
+        print(f'Items you have: {player.inventory}')
+    
+        # Allow player to take and drop items from rooms
+        action = input("Please enter take or drop followed by an item name to take or drop an item: ")
+        user_action = action.split(" ")
+        print(user_action)
+        
+        if user_action[0] == "take":
+            item = player.current_room.get_item(user_action[1])
+            if item == None:
+                print("That item is not in the room.")
+            else:
+                # Remove items from rooms and add them to player contents
+                player.current_room.items.remove(item)
+                player.inventory.append(item)
+                item.on_take()
+        elif user_action[0] == "drop":
+            item = player.get_item(user_action[1])
+            if item == None:
+                print("That item is not in your inventory.")
+            else:
+                # Remove items from player items list and add them to rooms and add them to rooms
+                player.current_room.items.append(item)
+                player.inventory.remove(item)
+                item.on_drop()
+ 
     else:
         print("Invalid direction.")
-        print("Please enter a valid diection from the list: ")
+        print("Please enter a valid diection from the list of items: ")
         print(player.current_room)
